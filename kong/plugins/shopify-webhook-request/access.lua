@@ -79,9 +79,7 @@ local function validate_body(digest_recieved, secret)
     ngx.log(ngx.DEBUG, "HMAC hash matches: " .. tostring(match ))
     return match
 end
-local function validate_params(params, conf)
-    ngx.log(ngx.DEBUG, "validate_params")
-
+local function validate_params(params, headers, conf)
     -- check username and signature are present
     if not params.signature then
       ngx.log(ngx.DEBUG, "no hmac signature found")
@@ -89,17 +87,17 @@ local function validate_params(params, conf)
     end
     -- check enforced headers are present
     if conf.required_headers and #conf.required_headers >= 1 then
-      local enforced_header_set = list_as_set(conf.required_headers)
+      
+      local found_headers_set  = list_as_set(headers)
       for _, header in ipairs(conf.required_headers) do
-        ngx.log(ngx.DEBUG, "checking required header: " .. header )
-        if not enforced_header_set[header] then
-          return nil, "required header not found: " .. header
+        ngx.log(ngx.DEBUG, "checking required header: " .. tostring(header) )
+        if not found_headers_set[header] then
+          return nil, "required header not found: " .. tostring(header)
         end
       end
     else
-      print("no required headers")
+      ngx.log(ngx.DEBUG, "no required headers configured")
     end
-
     return true, "required headers found"
 end
 
@@ -112,9 +110,9 @@ local function do_authentication(conf)
   end
   local hmac_params = retrieve_hmac_fields(ngx.req, headers, DIGEST, conf)
 
-  local ok, err = validate_params(hmac_params, conf)
+  local ok, err = validate_params(hmac_params, headers, conf)
   if not ok then
-    ngx_log(ngx.DEBUG, err)
+    ngx.log(ngx.DEBUG, "error: " .. tostring(err))
     return false, {status = 403, message = REQUEST_NOT_VALID}
   end
 
@@ -136,6 +134,5 @@ function _M.execute(conf)
         return responses.send(err.status, err.message)
     end
 end
-  
 
 return _M

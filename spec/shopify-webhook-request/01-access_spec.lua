@@ -54,7 +54,6 @@ describe("shopify-webhoo-request (access)", function()
     it("gets a 'hello-world' header", function()
       local postBody = '{"a":"apple","b":"ball"}'
       local hmac_hash = create_hash(secret, postBody)
-      print("header hash :" .. hmac_hash)
       local r = assert(client:send {
         method = "POST",
         path = "/request",  -- makes mockbin return the entire request
@@ -102,7 +101,8 @@ describe("shopify-webhoo-request (access), check required headers", function()
   end)
 
   teardown(function()
-    helpers.stop_kong('servroot', true)
+    -- helpers.stop_kong('servroot', true)
+    helpers.stop_kong()
     helpers.dao:drop_schema()
   end)
 
@@ -114,11 +114,11 @@ describe("shopify-webhoo-request (access), check required headers", function()
     if client then client:close() end
   end)
 
-  describe("basic verfication", function()
+  describe("checking required header", function()
     it("gets a 'hello-world' header", function()
       local postBody = '{"a":"apple","b":"ball"}'
       local hmac_hash = create_hash(secret, postBody)
-      print("header hash :" .. hmac_hash)
+
       local r = assert(client:send {
         method = "POST",
         path = "/request",  -- makes mockbin return the entire request
@@ -129,7 +129,7 @@ describe("shopify-webhoo-request (access), check required headers", function()
         }
       })
       -- validate that the request succeeded, response status 200
-      local body = assert.res_status(200, r)
+      local body = assert.res_status(403, r)
       body = cjson.decode(body)
     end)
   end)

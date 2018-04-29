@@ -3,8 +3,8 @@ return {
   no_consumer = true, -- this plugin is available on APIs as well as on Consumers,
   fields = {
     -- Describe your plugin's configuration's schema here.
-    domain = {type = "string"},
-    secret = {type = "string"},
+    domain = {type = "string", required=true},
+    secret = {type = "string", required=true },
     required_headers = {type="array"}
   },
   self_check = function(schema, plugin_t, dao, is_updating)
