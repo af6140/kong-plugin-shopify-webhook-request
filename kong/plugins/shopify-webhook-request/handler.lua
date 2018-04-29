@@ -9,13 +9,13 @@ local plugin_name = ({...})[1]:match("^kong%.plugins%.([^%.]+)")
 
 -- load the base plugin object and create a subclass
 local plugin = require("kong.plugins.base_plugin"):extend()
-local access = require "kong.plugins.shopify-webhook-hmac.access"
+local access = require "kong.plugins.shopify-webhook-request.access"
 -- constructor
 function plugin:new()
   plugin.super.new(self, plugin_name)
   
   -- do initialization here, runs in the 'init_by_lua_block', before worker processes are forked
-
+  print("plugin initialize")
 end
 
 ---------------------------------------------------------------------------------------------
@@ -59,10 +59,14 @@ end --]]
 
 ---[[ runs in the 'access_by_lua_block'
 function plugin:access(plugin_conf)
+  print("access.execute ")
+
   plugin.super.access(self)
 
   -- your custom code here
   -- ngx.req.set_header("Hello-World", "this is on a request")
+  print("access.execute ")
+
   access.execute(plugin_conf)
   
 end --]]

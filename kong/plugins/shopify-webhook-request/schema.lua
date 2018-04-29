@@ -1,3 +1,4 @@
+local Errors = require "kong.dao.errors"
 return {
   no_consumer = true, -- this plugin is available on APIs as well as on Consumers,
   fields = {
@@ -8,7 +9,7 @@ return {
   },
   self_check = function(schema, plugin_t, dao, is_updating)
     -- perform any custom verification
-    if not plugin_t.doamin then
+    if not plugin_t.domain then
       return false, Errors.schema("domain is required")
     end
     if not plugin_t.secret then
