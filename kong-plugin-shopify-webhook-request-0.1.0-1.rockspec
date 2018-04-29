@@ -1,4 +1,4 @@
-package = "kong-plugin-shopify-webhook-requst"  -- TODO: rename, must match the info in the filename of this rockspec!
+package = "kong-plugin-shopify-webhook-request"  -- TODO: rename, must match the info in the filename of this rockspec!
                                   -- as a convention; stick to the prefix: `kong-plugin-`
 version = "0.1.0-1"               -- TODO: renumber, must match the info in the filename of this rockspec!
 -- The version '0.1.0' is the source code version, the trailing '1' is the version of this rockspec.
@@ -7,13 +7,13 @@ version = "0.1.0-1"               -- TODO: renumber, must match the info in the 
 
 -- TODO: This is the name to set in the Kong configuration `custom_plugins` setting.
 -- Here we extract it from the package name.
-local pluginName = package:match("^kong%-plugin%-(.+)$")  -- "shopify-webhook-request"
-
+-- local pluginName = package:match("^kong%-plugin%-(.+)$")  -- "shopify-webhook-request"
+local pluginName= "shopify-webhook-request"
 supported_platforms = {"linux", "macosx"}
 source = {
   -- these are initially not required to make it work
-  url = "git://github.com/Mashape/kong_plugin",
-  tag = "0.1.0"
+  url = "git://github.com/af6140/kong-plugin-shopify-webhook-request.git",
+  -- tag = "0.1.0"
 }
 
 description = {
